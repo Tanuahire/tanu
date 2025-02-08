@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Our Love Story 💖</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background: linear-gradient(45deg, #d6086f, #8000ff, #d6086f); /* Hot pink and purple gradient */
+            height: 100vh;
+            margin: 0;
+            padding: 20px;
+            overflow: hidden; /* Keeps petals inside */
+        }
+        .container {
+            max-width: 500px;
+            margin: auto;
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+            position: relative;
+            margin-top: 50px;
+        }
+        h1 {
+            color: #d63384;
+        }
+        .question {
+            font-size: 20px;
+            margin: 20px 0;
+        }
+        button {
+            font-size: 18px;
+            padding: 10px 20px;
+            margin: 10px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            position: relative;
+        }
+        .yes {
+            background-color: #28a745;
+            color: white;
+        }
+        .no {
+            background-color: #dc3545;
+            color: white;
+            position: relative;
+        }
+        #proposal {
+            display: none;
+            font-size: 24px;
+            font-weight: bold;
+            color: #d63384;
+            margin-top: 20px;
+        }
+        .petal {
+            position: fixed;
+            width: 30px;
+            height: 30px;
+            background: url('https://upload.wikimedia.org/wikipedia/commons/7/71/Rose_icon.png') no-repeat center/cover;
+            opacity: 0.8;
+            pointer-events: none;
+            animation: fall linear infinite;
+        }
+        @keyframes fall {
+            0% { transform: translateY(-10vh) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(110vh) rotate(360deg); opacity: 0; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Our Love Story 💖</h1>
+        <p id="question" class="question">Do you love me? 😊</p>
+        
+        <button class="yes" onclick="nextQuestion(true)">Yes! 💕</button>
+        <button class="no" id="noBtn" onclick="nextQuestion(false)">No 😢</button>
+
+        <p id="proposal"></p>
+    </div>
+
+    <script>
+        let questions = [
+            "Do you love me? 😊",
+            "Do you enjoy our time together? 🥰",
+            "Am I your favorite person in the world? ❤️",
+            "Can you imagine a future with me? 💍",
+            "Would you like to spend forever with me? 😘"
+        ];
+        let index = 0;
+        let finalStage = false;
+
+        // Store the original position of the "No" button
+        let originalNoBtnPosition = { left: 0, top: 0 };
+
+        function nextQuestion(answer) {
+            if (!answer) {
+                if (finalStage) {
+                    bounceNoButton(); // Make the "No" button bounce away after clicking it in the final stage
+                } else {
+                    alert("Oh no! Think again! 😢");
+                }
+                return;
+            }
+
+            index++;
+            if (index < questions.length) {
+                document.getElementById("question").innerText = questions[index];
+            } else {
+                finalStage = true;
+                document.getElementById("question").style.display = "none";
+                document.getElementById("proposal").style.display = "block";
+                document.getElementById("proposal").innerHTML = "Will You Marry Me? 💍❤️";
+
+                // Store the original position of the "No" button when the final stage starts
+                originalNoBtnPosition = document.getElementById("noBtn").getBoundingClientRect();
+
+                document.querySelector(".yes").setAttribute("onclick", "startPetalShower()");
+            }
+        }
+
+        function bounceNoButton() {
+            let noBtn = document.getElementById("noBtn");
+            let container = document.querySelector(".container");
+            let maxX = container.clientWidth - noBtn.clientWidth - 40;
+            let maxY = container.clientHeight - noBtn.clientHeight - 40;
+
+            // Set the button back to its original position before bouncing
+            noBtn.style.position = "absolute";
+            noBtn.style.left = originalNoBtnPosition.left + "px";
+            noBtn.style.top = originalNoBtnPosition.top + "px";
+
+            setTimeout(() => {
+                let randomX = Math.random() * maxX;
+                let randomY = Math.random() * maxY;
+
+                // Move the "No" button to a random position after the user clicks
+                noBtn.style.left = randomX + "px";
+                noBtn.style.top = randomY + "px";
+            }, 100);
+        }
+
+        function startPetalShower() {
+            setInterval(createPetal, 200); // Creates petals continuously
+            alert("YAY! I love you! 💖🌹");
+        }
+
+        function createPetal() {
+            let petal = document.createElement("div");
+            petal.className = "petal";
+            document.body.appendChild(petal);
+
+            let startX = Math.random() * window.innerWidth;
+            let duration = Math.random() * 5 + 3;
+            let rotation = Math.random() * 360;
+
+            petal.style.left = `${startX}px`;
+            petal.style.animationDuration = `${duration}s`;
+            petal.style.transform = `rotate(${rotation}deg)`;
+
+            setTimeout(() => petal.remove(), duration * 1000);
+        }
+    </script>
+
+</body>
+</html>
